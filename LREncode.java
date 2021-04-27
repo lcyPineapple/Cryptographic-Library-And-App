@@ -39,7 +39,7 @@ public class LREncode {
      *  @return byte[] the byte representation of the integer
      * */
     public static byte[] enc8(int i){
-        byte[] myArr = new byte[]{0};
+        byte[] myArr = new byte[]{(byte)i};
         return myArr;
     }
 }
