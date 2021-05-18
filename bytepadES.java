@@ -10,24 +10,30 @@ import java.lang.reflect.Array;
 public class bytepadES {
 
     public static byte[] bytepad(byte[] str, int w) {
-        if (w > 0) {
-            bytes[] left = LREncode.leftEncode(w);
-            while (left.length mod 8 != 0) {
-                left = 0;
-            }
+        
+        byte leftEncode = LREncode.leftEncode(w);
 
-            while ((left.length / 8) mod 8 != 0) {
-                left = 00000000;
-            }
-        }
-        return left;
+        int total = leftEncode.length + str.length;
+        int len = total + (w - (total) % w);
+
+        byte[] output = Array.copyOf(leftEncode, len);
+        System.arraycopy(str, 0, output, leftEncode.length, str.length);
+
+        return output;
     }
 
     public static byte[] encodeString(byte[] str) {
-        if (s.length >= 0 or s.length < 22040) {
-            return LREncode.rightEncode(s);
+        int strLen;
+        byte[] leftEncode = LREncode.leftEncode(str.length * 8);
+
+        if str != NULL {
+            strLen = str.length;
+        } else {
+            strLen = 0;
         }
-        //return s;
+
+        byte output = Array.copyOf(leftEncode, leftEncode + strLen);
+        System.arraycopy(str, 0, output, leftEncode.length, strLen);
     }
     
 }
