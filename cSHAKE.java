@@ -1,15 +1,19 @@
 /** This File contains .
  *
- * @author Melinda Tran
+ * @author
  * @date 5/2/2021
  *
  **/
 
 public class cSHAKE {
-    public long[/*25*/] st;          // 64-bit words
+	
+	/***/
+    public byte[] st;          		// 64-bit words
+    
+    /***/
     public int pt, rsiz, mdlen;     // these don't overflow
 
-    // constants
+    /***/
     public static final long[] keccakf_rndc = {
             0x0000000000000001L, 0x0000000000008082L, 0x800000000000808aL,
             0x8000000080008000L, 0x000000000000808bL, 0x0000000080000001L,
@@ -21,22 +25,35 @@ public class cSHAKE {
             0x8000000000008080L, 0x0000000080000001L, 0x8000000080008008L
     };
 
+    /***/
     public static final int[] keccakf_rotc = {
             1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 2, 14,
             27, 41, 56, 8, 25, 43, 62, 18, 39, 61, 20, 44
     };
 
+    /***/
     public static final int[] keccakf_piln = {
             10, 7, 11, 17, 18, 3, 5, 16, 8, 21, 24, 4,
             15, 23, 19, 13, 12, 2, 20, 14, 22, 9, 6, 1
     };
 
+    /***/
     public static final int KECCAKF_ROUNDS = 24;
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
     public static long ROTL64 (long x, int y) {
         return ((x << y) | (x >>> (-y)));
     };
 
+    /**
+     * 
+     * @param v
+     */
     public static void sha3_keccakf(byte[/*200*/] v) {
         long t;
         long[] bc = new long[5];
@@ -58,7 +75,7 @@ public class cSHAKE {
             }
 
             for (int i = 0; i < 5; i++) {
-                t = bc[(i + 4) % 5] ^ ROTL64(bc[(i + 1) % 5], 1));
+                t = bc[(i + 4) % 5] ^ ROTL64(bc[(i + 1) % 5], 1);
                 for (int j = 0; j < 25; j += 5) {
                     q[j + i] ^= t;
                 }
@@ -102,20 +119,27 @@ public class cSHAKE {
 
     }
 
-    // Initialize the context for SHA3
-
-    int sha3_init(int _mdlen) {
+    /**
+     * 
+     * 
+     * @param _mdlen
+     */
+    public void sha3_init(int _mdlen) {
         for (int i = 0; i < 25; i++) {
-            st[i] = 0L;
+            st[i] = (byte) 0;
         }
         mdlen = _mdlen;
-        rsize = 200 - 2 * mdlen;
+        rsiz = 200 - 2 * mdlen;
         pt = 0;
     }
 
-    // update state with more data
-
-    void sha3_update(byte[] data, int len) {
+    /**
+     * 
+     * 
+     * @param data
+     * @param len
+     */
+    public void sha3_update(byte[] data, int len) {
         int j = pt;
         for (int i = 0; i < len; i++) {
             st[j++] ^= data[i];
@@ -127,9 +151,12 @@ public class cSHAKE {
         pt = j;
     }
 
-    // finalize and output a hash
-
-    void sha3_final(byte[] output) {
+    /**
+     * 
+     * 
+     * @param output
+     */
+    public void sha3_final(byte[] output) {
         st[pt] ^= 0x06;
         st[rsiz - 1] ^= 0x80;
         sha3_keccakf(st);
@@ -139,9 +166,10 @@ public class cSHAKE {
         }
     }
 
-    // SHAKE128 and SHAKE256 extensible-output functionality
-
-    void shak_xof() {
+    /**
+     * 
+     */
+    public void shak_xof() {
         st[pt] ^= 0x1F;
         st[rsiz - 1] ^= 0x80;
         sha3_keccakf(st);
