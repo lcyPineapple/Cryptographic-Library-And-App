@@ -26,7 +26,6 @@ public class LREncode {
         int n = 0;
         if (x.bitLength() >= 2){
             n = x.bitLength()/8 + 1;
-
         }
         System.out.println(n);
         byte[] myArr = new byte[]{0};
