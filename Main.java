@@ -17,8 +17,9 @@ public class Main {
         //Test Section for LREncode:
         //byte[] bytes = LREncode.enc8(128);
         //System.out.println(bytes[0]);
-        BigInteger myInt = new BigInteger("127");
-        byte[] bytes = LREncode.rightEncode(myInt);
+       // BigInteger myInt = new BigInteger("127");
+        int myInt = 127;
+        byte[] bytes = LREncode.right_Encode(myInt);
         ////////////////////////////////////
 
 // --------------------------------- Main Section -------------------------------- //
