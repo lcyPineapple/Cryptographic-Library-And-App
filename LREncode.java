@@ -31,11 +31,11 @@ public class LREncode {
         	throw new RuntimeException("Integer x in LREncode right_encode is too large");
         }
         byte[] myArr = new byte[n + 1];
-        for(int i = 0; i <= n; i++) {     //TO DO CHECK FOR LOOP PARAMETERS FOR OUT OF BOUNDS ALSO IN LEFT_ENCODE
+        for(int i = 0; i < n; i++) {     
         	myArr[i] = (byte) (x & 0xFF);
         	x = x >>> 8;
         }
-        myArr[n + 1] = (byte) n;
+        myArr[n] = (byte) n;
         return myArr;
     }
     /* This method right encodes large integers
@@ -53,7 +53,7 @@ public class LREncode {
          }
          byte[] myArr = new byte[n + 1];
          myArr[0] = (byte) n;
-         for(int i = 1; i <= n + 1; i++) {
+         for(int i = 1; i <= n; i++) {
          	myArr[i] = (byte) (x & 0xFF);
          	x = x >>> 8;
          }
