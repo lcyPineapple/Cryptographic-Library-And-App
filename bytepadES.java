@@ -22,7 +22,7 @@ public class bytepadES {
         return output;
     }
 
-    public static byte[] encodeString(byte[] str) {
+    public static byte[] encode_String(byte[] str) {
         int strLen = 0;
         byte[] leftEncode = LREncode.left_Encode(str.length * 8);
 
