@@ -11,7 +11,7 @@ public class bytepadES {
 
     public static byte[] bytepad(byte[] str, int w) {
         
-        byte[] leftEncode = LREncode.left_Encode(w); // Big integer vs int
+        byte[] leftEncode = LREncode.left_Encode(w);
 
         int total = leftEncode.length + str.length;
         int len = total + (w - (total) % w);
@@ -23,14 +23,10 @@ public class bytepadES {
     }
 
     public static byte[] encodeString(byte[] str) {
-        int strLen;
-        byte[] leftEncode = LREncode.left_Encode(str.length * 8); // Big integer vs int
+        int strLen = 0;
+        byte[] leftEncode = LREncode.left_Encode(str.length * 8);
 
-        if (str != null) {
-            strLen = str.length;
-        } else {
-            strLen = 0;
-        }
+        strLen = str.length;
 
         byte[] output = Arrays.copyOf(leftEncode, leftEncode.length + strLen);
         System.arraycopy(str, 0, output, leftEncode.length, strLen);
