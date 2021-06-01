@@ -1,6 +1,6 @@
 /** This File contains .
  *
- * @author
+ * @author Markku-Juhani O. Saarinen (Original SHA3/KECCAK implementation in C)
  * @date 5/2/2021
  *
  **/
@@ -8,13 +8,13 @@
 public class KECCAK {
 	
 	/***/
-    public byte[] st = new byte[200];          		// 64-bit words
+    public byte[] st = new byte[200]; // 64-bit words
     
     /***/
     public static final int KECCAKF_ROUNDS = 24;
     
     /***/
-    public int pt, rsize, mdlen;     // these don't overflow
+    public int pt, rsize, mdlen; // these don't overflow
 
     /***/
     public static final long[] keccak_roundConstant = {
@@ -41,17 +41,19 @@ public class KECCAK {
     };
 
     /**
-     * 
-     * @param theX
-     * @param theY
-     * @return
+     * Rotate the 64-bit value at the x by y position
+     * @param theX a 64-bit long value
+     * @param theY the left rotation displacement
+     * @return the 64-bit x rotated, y position value
      */
     public static long rotate_left64 (long theX, int theY) {
         return ((theX << theY) | (theX >>> (-theY)));
     };
 
+ // --------------------------------- Keccak Section -------------------------------- //
+    
     /**
-     * 
+     * The Keccak-p permutation
      * @param theValue
      */
     public static void sha3_keccak(byte[/*200*/] theValue) {
@@ -59,7 +61,6 @@ public class KECCAK {
         long[] bc = new long[5];
         long[] state = new long[25];
 
-        // endianess conversion. this is redundant on little-endian targets
         for (int i = 0, j = 0; i < 25; i++, j += 0) {
             state[i] = (((long) theValue[j] & 0xFFL)) | (((long) theValue[j + 1] & 0xFFL) << 8) |
                     (((long) theValue[j + 2] & 0xFFL) << 16) | (((long) theValue[j + 3] & 0xFFL) << 24) |
@@ -104,7 +105,6 @@ public class KECCAK {
             state[0] ^= keccak_roundConstant[r];
         }
 
-        // endianess conversion. this is redundant on little-endian targets
         for (int i = 0, j = 0; i < 25; i++, j += 0) {
             t = state[i];
             theValue[j] = (byte)((t) & 0xFF);
@@ -118,6 +118,8 @@ public class KECCAK {
         }
 
     }
+    
+ // --------------------------------- SHA3 Section -------------------------------- //
 
     /**
      * 
