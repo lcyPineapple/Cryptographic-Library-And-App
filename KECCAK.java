@@ -5,7 +5,7 @@
  *
  **/
 
-public class cSHAKE {
+public class KECCAK {
 	
 	/***/
     public byte[] st = new byte[200];          		// 64-bit words
