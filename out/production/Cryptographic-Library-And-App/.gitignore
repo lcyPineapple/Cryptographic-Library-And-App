@@ -1,14 +1,15 @@
 /.classpath
 /.idea/
 /.project
+/.settings/
 /.vs/
 /Cryptographic-Library-And-App.iml
+/KECCAK.class
 /KMACXOF256.class
 /LREncode.class
 /Main.class
 /README.md
 /SHAKEKECCAK.class
 /bytepadES.class
-/cSHAKE.class
+/cSHAKE256.class
 /out/
-/.settings/

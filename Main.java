@@ -1,6 +1,12 @@
+import java.io.File;
 import java.io.PrintStream;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 public class Main {
 		
@@ -35,6 +41,10 @@ public class Main {
         	
         	switch (choice) {
         	
+        		// ************************************** //
+        		// *		Symmetric Cryptography		* //
+        		// ************************************** //
+        	
         		// Symmetric Cryptography
         		case 1:
         			
@@ -51,6 +61,12 @@ public class Main {
                 			
                 		// Message for Cryptographic Hash
                 		case 2:
+                			System.out.println("Enter your message: ");
+                			input.nextLine();
+                			String userInput = input.nextLine();
+                			byte[] message = userInput.getBytes();
+                			System.out.println("Cryptographic Hash Result: " + message);
+                			
                 			break;
                 			
                 		// Encrypt a Data File
@@ -58,7 +74,7 @@ public class Main {
                 			break;
                 			
                 		// Decrypt a Data File
-                		case 4:
+                		case 4:              			
                 			break;
                 		
                 		// Compute an Authentication Tag (MAC)
@@ -72,6 +88,10 @@ public class Main {
                 	}
                 	
         			break;
+        			
+            	// ************************************** //
+            	// *	  Elliptic Curve Arithmetic		* //
+           		// ************************************** //
         			
         		// Generate Elliptic Curve Arithmetic
         		case 2:
@@ -106,14 +126,30 @@ public class Main {
 	            			
 	            			displayEncryptDecrypt();
 	            			int encryptDecrypt  = input.nextInt();
+	            			
+	            			String userInput;
+            				byte[] message;
+            				
 	            			switch (encryptDecrypt) {
 	            			
-	            				// Encrypt the message
+	           	            	// Encrypt the message
 		            			case 1:
+		            				System.out.println("Enter your message: ");
+		                			input.nextLine();
+		                			userInput = input.nextLine();
+		                			message = userInput.getBytes();
+		                			System.out.println("Encrypted message: " + message);
+		                			
 		            				break;
 		            				
 		            			// Decrypt the message
 		            			case 2:
+		            				System.out.println("Enter your message: ");
+		                			input.nextLine();
+		                			userInput = input.nextLine();
+		                			message = userInput.getBytes();
+		                			System.out.println("Decrypted message: " + message);
+		                			
 		            				break;
 		            				
 		            			// Exit Program
@@ -208,6 +244,9 @@ public class Main {
     	System.out.print("Enter an option: ");
     }
     
+    /**
+     * Display the option to encrypt/decrypt a message
+     */
     public static void displayEncryptDecrypt() {
     	StringBuilder sb = new StringBuilder();
     	
