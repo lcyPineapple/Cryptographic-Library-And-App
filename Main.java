@@ -39,6 +39,8 @@ public class Main {
         	
         	int choice = input.nextInt();
         	
+        	File selectedFile = null;
+        	
         	switch (choice) {
         	
         		// ************************************** //
@@ -52,7 +54,7 @@ public class Main {
         			
         			displaySymmetric();
                 	int symmetricChoice = input.nextInt();
-        			
+                	        			
                 	switch (symmetricChoice) {
                 		
                 		// Cryptographic Hash
@@ -71,10 +73,32 @@ public class Main {
                 			
                 		// Encrypt a Data File
                 		case 3:
+                			System.out.println("Select file to encrypt: ");
+                			JFileChooser encryptFile = new JFileChooser(FileSystemView.getFileSystemView());
+                			
+                			int encryptValue = encryptFile.showOpenDialog(null);
+                			
+                			if (encryptValue == JFileChooser.APPROVE_OPTION) {
+                				selectedFile = encryptFile.getSelectedFile();
+                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
+                				System.out.println("Encrypted file is saved to: " + filePath.toString());
+                			}
+                			
                 			break;
                 			
                 		// Decrypt a Data File
-                		case 4:              			
+                		case 4:
+                			System.out.println("Select file to decrypt: ");
+                			JFileChooser decryptFile = new JFileChooser(FileSystemView.getFileSystemView());
+                			
+                			int decryptValue = decryptFile.showOpenDialog(null);
+                			
+                			if (decryptValue == JFileChooser.APPROVE_OPTION) {
+                				selectedFile = decryptFile.getSelectedFile();
+                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
+                				System.out.println("Decrypted file is saved to: " + filePath.toString());
+                			}
+                			
                 			break;
                 		
                 		// Compute an Authentication Tag (MAC)
@@ -113,10 +137,32 @@ public class Main {
 	            			
 	            		// Encrypt a Data File
 	            		case 3:
+	            			System.out.println("Select file to encrypt: ");
+                			JFileChooser encryptFile = new JFileChooser(FileSystemView.getFileSystemView());
+                			
+                			int encryptValue = encryptFile.showOpenDialog(null);
+                			
+                			if (encryptValue == JFileChooser.APPROVE_OPTION) {
+                				selectedFile = encryptFile.getSelectedFile();
+                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
+                				System.out.println("Encrypted file is saved to: " + filePath.toString());
+                			}
+                			
 	            			break;
 	            			
 	            		// Decrypt an Elliptic-encrypted File
 	            		case 4:
+	            			System.out.println("Select file to decrypt: ");
+                			JFileChooser decryptFile = new JFileChooser(FileSystemView.getFileSystemView());
+                			
+                			int decryptValue = decryptFile.showOpenDialog(null);
+                			
+                			if (decryptValue == JFileChooser.APPROVE_OPTION) {
+                				selectedFile = decryptFile.getSelectedFile();
+                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
+                				System.out.println("Decrypted file is saved to: " + filePath.toString());
+                			}
+                			
 	            			break;
 	            			
 	            		// Message to Encrypt/Decrypt
