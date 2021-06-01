@@ -25,7 +25,7 @@ public class KMACXOF256 {
 		byte[] newX = new byte[result.length + mybytepad.length];
 		System.arraycopy(mybytepad, 0, newX, 0, mybytepad.length);
 		System.arraycopy(result, 0, newX, mybytepad.length, result.length);
-		//return cSHAKE256(newX, L, "KMAC", S);
-		return end; 
+		return cSHAKE256.thecSHAKE256(newX, L, "KMAC", S);
+		//return end; 
 	} 
 }

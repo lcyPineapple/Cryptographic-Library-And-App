@@ -26,6 +26,7 @@ public class Main {
        // BigInteger myInt = new BigInteger("127");
         int myInt = 127;
         byte[] bytes = LREncode.right_Encode(myInt);
+        //for ()
         ////////////////////////////////////
 
 // --------------------------------- Main Section -------------------------------- //
