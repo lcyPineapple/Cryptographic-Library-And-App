@@ -231,6 +231,10 @@ public class Main {
         input.close();
     }
     
+	// ************************************** //
+	// *			Console Menu			* //
+	// ************************************** //
+    
     /**
      * Display the main menu and what this application does
      */

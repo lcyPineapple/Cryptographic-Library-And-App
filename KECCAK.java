@@ -41,14 +41,11 @@ public class KECCAK {
     };
 
     /**
-     * Rotate the 64-bit value at the x by y position
-     * @param theX a 64-bit long value
-     * @param theY the left rotation displacement
-     * @return the 64-bit x rotated, y position value
+     * Empty constructor
      */
-    public static long rotate_left64 (long theX, int theY) {
-        return ((theX << theY) | (theX >>> (-theY)));
-    };
+    public KECCAK() {
+    	
+    }
 
  // --------------------------------- Keccak Section -------------------------------- //
     
@@ -119,12 +116,22 @@ public class KECCAK {
 
     }
     
+    /**
+     * Rotate the 64-bit value at the x by y position
+     * @param theX a 64-bit long value
+     * @param theY the left rotation displacement
+     * @return the 64-bit x rotated, y position value
+     */
+    public static long rotate_left64 (long theX, int theY) {
+        return ((theX << theY) | (theX >>> (-theY)));
+    };
+    
  // --------------------------------- SHA3 Section -------------------------------- //
 
     /**
      * 
      * 
-     * @param theMdlen
+     * @param theMdlen should always be 32 for SHAKE
      */
     public void sha3_init(int theMdlen) {
         for (int i = 0; i < 25; i++) {
@@ -155,6 +162,15 @@ public class KECCAK {
 
     /**
      * 
+     */
+    public void shake_xof() {
+        st[pt] ^= 0x1F;
+        st[rsize - 1] ^= 0x80;
+        sha3_keccak(st);
+        pt = 0;
+    }
+    
+    /**
      * 
      * @param theOutput
      */
@@ -166,16 +182,6 @@ public class KECCAK {
         for (int i = 0; i < mdlen; i++) {
             theOutput[i] = st[i];
         }
-    }
-
-    /**
-     * 
-     */
-    public void shake_xof() {
-        st[pt] ^= 0x1F;
-        st[rsize - 1] ^= 0x80;
-        sha3_keccak(st);
-        pt = 0;
     }
 
 }
