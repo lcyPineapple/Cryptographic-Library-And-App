@@ -47,17 +47,14 @@ public class cSHAKE256 {
 			message = Arrays.copyOf(message, message.length + newbyte.length);
 			System.arraycopy(newbyte, 0, message, message.length, newbyte.length);
 			
-//<<<<<<< Updated upstream
 			KECCAK keccak_512 = new KECCAK();
 			keccak_512.sha3_init(32);
 			keccak_512.sha3_update(message, L);
 			keccak_512.shake_xof();
 			keccak_512.sha3_final(message);
 			
+			// KECCAK(message, L, 512);
 			return message;
-			//return KECCAK(message, L, 512);
-//=======
-//>>>>>>> Stashed changes
 		}
 	}
 	
@@ -83,7 +80,7 @@ public class cSHAKE256 {
 		keccak_512.shake_xof();
 		keccak_512.sha3_final(message);
 		
-		//return KECCAK(message, L, 512);
+		// KECCAK(message, L, 512);
 		return message;
 	}
 }
