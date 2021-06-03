@@ -26,15 +26,15 @@ public class cSHAKE256 {
 	 * @param S the customization string
 	 * @return call SHAKE or return KECCAK[512]
 	 */
-	public static byte[] thecSHAKE256(byte[] X, int L, String N, String S) {
+	public static byte[] thecSHAKE256(byte[] X, int L, String N, byte[] S) {
 		
-		if (N.equals("") && S.equals("")) {
+		if (N.equals("") && S == null) {
 			return theSHAKE256(X, L);
 			
 		} else {
 			
 			byte[] encodeN = bytepadES.encode_String(N.getBytes());
-			byte[] encodeS = bytepadES.encode_String(S.getBytes());
+			byte[] encodeS = bytepadES.encode_String(S);
 			
 			byte[] message = Arrays.copyOf(encodeN, encodeN.length + encodeS.length);
 			System.arraycopy(encodeS, 0, message, encodeN.length, encodeS.length);
