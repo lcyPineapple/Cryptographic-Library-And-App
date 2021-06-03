@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -14,8 +15,9 @@ public class Main {
 	 * Main function for this program
 	 * 
 	 * @param theArgs
+	 * @throws IOException 
 	 */
-    public static void main(String[] theArgs) {
+    public static void main(String[] theArgs) throws IOException {
 
 // --------------------------------- Test Section -------------------------------- //
     	
@@ -38,6 +40,8 @@ public class Main {
         	
             System.out.println(Integer.toBinaryString(myByte));
         }
+        
+        EnDeCrypt.encryptFileSymetric("C:\\Users\\Leika Yamada\\Documents\\GitHub\\copy\\Cryptographic-Library-And-App\\test.txt", "mypass");
         ////////////////////////////////////
 
 // --------------------------------- Main Section -------------------------------- //
