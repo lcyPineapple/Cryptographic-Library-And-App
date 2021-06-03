@@ -50,7 +50,5 @@ public class EnDeCrypt {
 			outputException.printStackTrace();
 		}
         System.out.println("Successfully Encrypted.");
-	}
-	
- 
+	} 
 }
