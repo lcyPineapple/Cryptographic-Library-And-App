@@ -18,6 +18,22 @@ public class EnDeCrypt {
 	public static final char[] HEXIDECIMAL = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	
 	/**
+	 * Computing a cryptographic hash h of a byte array m:
+	 * h = KMACXOF256(“”, m, 512, “D”)
+	 * @param myText, the text we want to hash
+	 */
+	public static void hash(String myText) {
+		byte[] myhashedBytes = KMACXOF256.theKMACXOF256("".getBytes(), myText.getBytes(), 512, "D".getBytes());
+	    StringBuilder hashedInput = new StringBuilder();
+        for (byte msg : myhashedBytes) {
+     	   int hex = msg & 0xFF;
+            hashedInput.append(HEXIDECIMAL[hex >>> 4]); 
+            hashedInput.append(HEXIDECIMAL[hex & 0x0F]); 
+        }
+        System.out.println("The cryptographic hash of your input is: " + hashedInput.toString());
+	}
+	
+	/**
 	 * Symmetric encryption under a password according to document spec: 
 	 * z = Random(512)
 	 * (ke || ka) = KMACXOF256(z || pw, “”, 1024, “S”)
@@ -95,15 +111,15 @@ public class EnDeCrypt {
 	        
 	        if (Arrays.equals(tValuePrime, tValue)) {
 	           StringBuilder decryptedFile = new StringBuilder();
-	            for (byte msg : mValuexorC) {
-	                int hex = msg & 0xFF;
-	                decryptedFile.append(HEXIDECIMAL[hex >>> 4]); // print the left 4 digits first
-	                decryptedFile.append(HEXIDECIMAL[hex & 0x0F]); // print the right 4 digits first
-	            }
-	            String myDecryption = decryptedFile.toString();
-	            System.out.println("File is decrypted" + myDecryption);
+	           for (byte msg : mValuexorC) {
+	        	   int hex = msg & 0xFF;
+	               decryptedFile.append(HEXIDECIMAL[hex >>> 4]);
+	               decryptedFile.append(HEXIDECIMAL[hex & 0x0F]);
+	           }
+	           String myDecryption = decryptedFile.toString();
+	           System.out.println("File is decrypted" + myDecryption);
 	        } else {
-	            System.out.println("Password is incorrect");
+	           System.out.println("Password is incorrect");
 	        }
 	    
 	}

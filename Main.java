@@ -25,22 +25,23 @@ public class Main {
         //byte[] bytes = LREncode.enc8(128);
         //System.out.println(bytes[0]);
        // BigInteger myInt = new BigInteger("127");
-        int myInt = 8 ;
-        byte[] bytes = LREncode.right_Encode(myInt);
-        for (byte myByte : bytes) 
-        { 
+        //int myInt = 8 ;
+        //byte[] bytes = LREncode.right_Encode(myInt);
+        //for (byte myByte : bytes) 
+        //{ 
         	
-            System.out.println(Integer.toBinaryString(myByte));
-        }
-        byte[] emptybyte = new byte[32];
-        byte[] bytes1 = bytepadES.encode_String(emptybyte);
-        for (byte myByte : bytes1) 
-        { 
+        //    System.out.println(Integer.toBinaryString(myByte));
+        //}
+        //byte[] emptybyte = new byte[32];
+        //byte[] bytes1 = bytepadES.encode_String(emptybyte);
+        //for (byte myByte : bytes1) 
+        //{ 
         	
-            System.out.println(Integer.toBinaryString(myByte));
-        }
+       //     System.out.println(Integer.toBinaryString(myByte));
+       // }
         
-        EnDeCrypt.encryptFileSymetric("C:\\Users\\Leika Yamada\\Documents\\GitHub\\copy\\Cryptographic-Library-And-App\\test.txt", "mypass");
+        EnDeCrypt.hash("hello");
+        //EnDeCrypt.encryptFileSymetric("C:\\Users\\Leika Yamada\\Documents\\GitHub\\copy\\Cryptographic-Library-And-App\\test.txt", "mypass");
         
         
         
