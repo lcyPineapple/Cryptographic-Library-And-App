@@ -13,8 +13,20 @@ import java.util.Arrays;
  * @date 6/01/2021
  * */
 public class EnDeCrypt {
+	
 	public static final int KINT = 64; // 512 possible bits in byte[64] for KECCAK[512]
-
+	public static final char[] HEXIDECIMAL = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	
+	/**
+	 * Symmetric encryption under a password according to document spec: 
+	 * z = Random(512)
+	 * (ke || ka) = KMACXOF256(z || pw, “”, 1024, “S”)
+	 * c = KMACXOF256(ke, “”, |m|, “SKE”) xor m
+	 * t = KMACXOF256(ka, m, 512, “SKA”)
+	 * symmetric cryptogram: (z, c, t)
+	 * @param fileName the file that contains data to encrypt
+	 * @param password, the password to encrypt the data under
+	 */
 	public static void encryptFileSymetric(String fileName, String password) throws IOException{
 		SecureRandom randNum = new SecureRandom();
 		byte[] myRandBytes = new byte[KINT];
@@ -50,5 +62,50 @@ public class EnDeCrypt {
 			outputException.printStackTrace();
 		}
         System.out.println("Successfully Encrypted.");
-	} 
+	}
+	
+	/**
+	 *  Decrypting a symmetric cryptogram (z, c, t) under passphrase pw:
+	 * (ke || ka) = KMACXOF256(z || pw, “”, 1024, “S”)
+	 * m = KMACXOF256(ke, “”, |c|, “SKE”) xor c
+	 * t’ = KMACXOF256(ka, m, 512, “SKA”)
+	 * accept if, and only if, t’ = t
+	 * @param fileName the file that contains data to encrypt
+	 * @param password, the password to encrypt the data under
+	 */
+	public static void decryptFileSymetric(String fileName, String password) throws IOException{
+	        byte[] encryptedFile = Files.readAllBytes(Paths.get(fileName));
+	        byte[] myPassBytes = password.getBytes();
+	        
+	        byte[] zValue = Arrays.copyOfRange(encryptedFile, 0, KINT);
+	        byte[] cValue = Arrays.copyOfRange(encryptedFile, KINT, encryptedFile.length - KINT);
+	        byte[] tValue = Arrays.copyOfRange(encryptedFile, encryptedFile.length - KINT, encryptedFile.length);
+
+	        byte[] pswd2 = new byte[zValue.length + myPassBytes.length];
+			System.arraycopy(zValue, 0, pswd2, 0, zValue.length);
+			System.arraycopy(myPassBytes, 0, pswd2, zValue.length, myPassBytes.length);
+		
+	        byte[] kellka = KMACXOF256.theKMACXOF256(pswd2, "".getBytes(), 1024, "S".getBytes());
+	        byte[] mValue = KMACXOF256.theKMACXOF256(Arrays.copyOfRange(kellka, 0, KINT), "".getBytes(), cValue.length * 8, "SKE".getBytes());
+	        byte[] mValuexorC = new byte[cValue.length];
+	        for (int i = 0; i < cValue.length; i++) {
+	            mValuexorC[i] = (byte) (cValue[i] ^ mValue[i]);
+	        }
+	        byte[] tValuePrime = KMACXOF256.theKMACXOF256(Arrays.copyOfRange(kellka, KINT, 128), mValuexorC, 512, "SKA".getBytes());
+	        
+	        if (Arrays.equals(tValuePrime, tValue)) {
+	           StringBuilder decryptedFile = new StringBuilder();
+	            for (byte msg : mValuexorC) {
+	                int hex = msg & 0xFF;
+	                decryptedFile.append(HEXIDECIMAL[hex >>> 4]); // print the left 4 digits first
+	                decryptedFile.append(HEXIDECIMAL[hex & 0x0F]); // print the right 4 digits first
+	            }
+	            String myDecryption = decryptedFile.toString();
+	            System.out.println("File is decrypted" + myDecryption);
+	        } else {
+	            System.out.println("Password is incorrect");
+	        }
+	    
+	}
+	
 }

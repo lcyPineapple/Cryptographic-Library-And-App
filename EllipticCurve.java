@@ -1,3 +1,11 @@
+/**
+ * This File contains the Elliptic Curve Algorithm
+ * 
+ * @author Melinda Tran
+ * @date 5/30/2021
+ *
+ */
+
 import java.math.BigInteger;
 
 public class EllipticCurve {
