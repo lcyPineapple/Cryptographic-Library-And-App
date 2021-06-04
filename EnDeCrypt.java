@@ -19,6 +19,26 @@ public class EnDeCrypt {
 	
 	/**
 	 * Extra Credit:
+	 * Compute an authentication tag t of a byte array m under passphrase pw:
+	 * t = KMACXOF256(pw, m, 512, “T”)
+	 * @param myText, the text we want to hash
+	 * @throws IOException 
+	 */
+	public static void hash(String password, String fileName) throws IOException {
+		byte[] fileInput = Files.readAllBytes(Paths.get(fileName));
+		
+		byte[] myhashedBytes = KMACXOF256.theKMACXOF256(password.getBytes(), fileInput, 512, "T".getBytes());
+	    StringBuilder hashedInput = new StringBuilder();
+        for (byte msg : myhashedBytes) {
+     	   int hex = msg & 0xFF;
+            hashedInput.append(HEXIDECIMAL[hex >>> 4]); 
+            hashedInput.append(HEXIDECIMAL[hex & 0x0F]); 
+        }
+        System.out.println("The authentication tag of your file is: " + hashedInput.toString());
+	}
+	
+	/**
+	 * Extra Credit:
 	 * Computing a cryptographic hash h of a byte array m:
 	 * Using text input from the user
 	 * h = KMACXOF256(“”, m, 512, “D”)
