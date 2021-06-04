@@ -18,7 +18,9 @@ public class EnDeCrypt {
 	public static final char[] HEXIDECIMAL = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	
 	/**
+	 * Extra Credit:
 	 * Computing a cryptographic hash h of a byte array m:
+	 * Using text input from the user
 	 * h = KMACXOF256(“”, m, 512, “D”)
 	 * @param myText, the text we want to hash
 	 */
@@ -31,6 +33,25 @@ public class EnDeCrypt {
             hashedInput.append(HEXIDECIMAL[hex & 0x0F]); 
         }
         System.out.println("The cryptographic hash of your input is: " + hashedInput.toString());
+	}
+	/**
+	 * Computing a cryptographic hash h of a byte array m:
+	 * Using a file input from the user
+	 * h = KMACXOF256(“”, m, 512, “D”)
+	 * @param myText, the text we want to hash
+	 * @throws IOException 
+	 */
+	public static void hashFromFile(String fileName) throws IOException {
+		byte[] fileInput = Files.readAllBytes(Paths.get(fileName));
+		
+		byte[] myhashedBytes = KMACXOF256.theKMACXOF256("".getBytes(), fileInput, 512, "D".getBytes());
+	    StringBuilder hashedInput = new StringBuilder();
+        for (byte msg : myhashedBytes) {
+     	   int hex = msg & 0xFF;
+            hashedInput.append(HEXIDECIMAL[hex >>> 4]); 
+            hashedInput.append(HEXIDECIMAL[hex & 0x0F]); 
+        }
+        System.out.println("The cryptographic hash of your file is: " + hashedInput.toString());        
 	}
 	
 	/**
