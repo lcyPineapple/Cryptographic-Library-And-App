@@ -113,12 +113,13 @@ public class EnDeCrypt {
 	    myOutput = streamOut.toByteArray();
 	    
 		try {
-		FileOutputStream writer = new FileOutputStream(fileName + ".txt");
-		writer.write(myOutput);
+			FileOutputStream writer = new FileOutputStream("Encryption.txt");
+			writer.write(myOutput);
+			writer.close();
 		} catch (IOException outputException) {
 			outputException.printStackTrace();
 		}
-        System.out.println("Successfully Encrypted.");
+        System.out.println("Successfully Encrypted. Encryption is saved in Encryption.txt");
 	}
 	
 	/**
@@ -158,7 +159,7 @@ public class EnDeCrypt {
 	               decryptedFile.append(HEXIDECIMAL[hex & 0x0F]);
 	           }
 	           String myDecryption = decryptedFile.toString();
-	           System.out.println("File is decrypted" + myDecryption);
+	           System.out.println("File is decrypted: " + myDecryption);
 	        } else {
 	           System.out.println("Password is incorrect");
 	        }
