@@ -45,10 +45,11 @@ public class bytepadES {
      * Encode bit string to parsed unambiguously
      * @param str bit string to be encoded
      * @return the encoded bit string
+     * 
      */
     public static byte[] encode_String(byte[] str) {
         int strLen = 0;
-        byte[] leftEncode = LREncode.left_Encode(str.length * 8);
+        byte[] leftEncode = LREncode.left_Encode(str.length * 8); // str.length << 3) 
 
         strLen = str.length;
 

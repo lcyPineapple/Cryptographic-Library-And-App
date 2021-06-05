@@ -28,34 +28,73 @@ public class cSHAKE256 {
 	 */
 	public static byte[] thecSHAKE256(byte[] X, int L, String N, byte[] S) {
 		
-		if (N.equals("") && S == null) {
-			return theSHAKE256(X, L);
+        byte[] cShake = new byte[L >>> 3];
+        KECCAK sha3 = new KECCAK();
+        sha3.sha3_init(32);
+        if ((N != null && N.length() != 0) || (S != null && S.length != 0)){
+        		byte[] encodeN = bytepadES.encode_String(N.getBytes());
+        		byte[] encodeS = bytepadES.encode_String(S);
+        		
+        		byte[] message = Arrays.copyOf(encodeN, encodeN.length + encodeS.length);
+        		System.arraycopy(encodeS, 0, message, encodeN.length, encodeS.length);
+        		
+        		byte[] mybytepad = bytepadES.bytepad(message, 136);
+        		sha3.sha3_update(mybytepad, mybytepad.length);
+            }
+        sha3.sha3_update(X, X.length);
+        sha3.shake_xof();
+        sha3.sha3_sponge(cShake, L >>> 3);
+        return cShake;
+		
+		
+		
+		      
+	//	        byte[] val = new byte[L >>> 3];
+	//	        SHAKE shake = new SHAKE();
+		//        shake.cinit256(N, S);
+		  //      shake.update(X, X.length);
+		    //    shake.xof();
+		     //   shake.out(val, L >>> 3);
+		      //  return val; // SHAKE256(X, L) or KECCAK512(prefix || X || 00, L)
+		   // }
+		
+		
+		
+		
+		
+		
+		//if (N.equals("") && S == null) {
+		//	return theSHAKE256(X, L);
 			
-		} else {
+//		} else {
 			
-			byte[] encodeN = bytepadES.encode_String(N.getBytes());
-			byte[] encodeS = bytepadES.encode_String(S);
+//			byte[] encodeN = bytepadES.encode_String(N.getBytes());
+	//		byte[] encodeS = bytepadES.encode_String(S);
+		//	
+	//		byte[] message = Arrays.copyOf(encodeN, encodeN.length + encodeS.length);
+	//		System.arraycopy(encodeS, 0, message, encodeN.length, encodeS.length);
+	//		
+	//		byte[] mybytepad = bytepadES.bytepad(message, 136);
+	//		message = Arrays.copyOf(mybytepad, mybytepad.length + X.length);
+	//		System.arraycopy(X, 0, message, mybytepad.length, X.length);
+	//		
+	//		//byte[] newbyte = new byte[] {0x04};
+	//		byte[] newbyte = new byte[] {0x00};
+	//		int mylength = message.length;
+	//		message = Arrays.copyOf(message, message.length + newbyte.length);
+	//		System.arraycopy(newbyte, 0, message, mylength, newbyte.length);
 			
-			byte[] message = Arrays.copyOf(encodeN, encodeN.length + encodeS.length);
-			System.arraycopy(encodeS, 0, message, encodeN.length, encodeS.length);
 			
-			byte[] mybytepad = bytepadES.bytepad(message, 136);
-			message = Arrays.copyOf(mybytepad, mybytepad.length + X.length);
-			System.arraycopy(X, 0, message, mybytepad.length, X.length);
 			
-			byte[] newbyte = new byte[] {0x04};
-			message = Arrays.copyOf(message, message.length + newbyte.length);
-			System.arraycopy(newbyte, 0, message, message.length, newbyte.length);
-			
-			KECCAK keccak_512 = new KECCAK();
-			keccak_512.sha3_init(32);
-			keccak_512.sha3_update(message, L);
-			keccak_512.shake_xof();
-			keccak_512.sha3_final(message);
+	//		KECCAK keccak_512 = new KECCAK();
+	//		keccak_512.sha3_init(32);
+	//		keccak_512.sha3_update(message, L);
+	//		keccak_512.shake_xof();
+	//		keccak_512.sha3_final(message);
 			
 			// KECCAK(message, L, 512);
-			return message;
-		}
+	//		return message;
+	//	}
 	}
 	
 	/**
@@ -64,23 +103,23 @@ public class cSHAKE256 {
 	 * @param L the integer representing requested output length in bits
 	 * @return return KECCAK[512]
 	 */
-	public static byte[] theSHAKE256(byte[] X, int L) {
-		byte[] message = Arrays.copyOf(X, X.length + 1);
-		int bytetopad = 136 - X.length % (136);
-		
-		if (bytetopad == 1) {
-			message[X.length] = (byte) 0x9f;
-		} else {
-			message[X.length] = (byte) 0x1f;
-		}
-		
-		KECCAK keccak_512 = new KECCAK();
-		keccak_512.sha3_init(32);
-		keccak_512.sha3_update(message, L);
-		keccak_512.shake_xof();
-		keccak_512.sha3_final(message);
-		
-		// KECCAK(message, L, 512);
-		return message;
-	}
+//	public static byte[] theSHAKE256(byte[] X, int L) {
+//		byte[] message = Arrays.copyOf(X, X.length + 1);
+//		int bytetopad = 136 - X.length % (136);
+//		
+//		if (bytetopad == 1) {
+//			message[X.length] = (byte) 0x9f;
+//		} else {
+//			message[X.length] = (byte) 0x1f;
+//		}
+//		
+//		KECCAK keccak_512 = new KECCAK();
+///		keccak_512.sha3_init(32);
+//		keccak_512.sha3_update(message, L);
+//		keccak_512.shake_xof();
+//		keccak_512.sha3_final(message);
+//		
+//		// KECCAK(message, L, 512);
+//		return message;
+//	}
 }

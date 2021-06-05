@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /** This File contains .
  *
  * @author Markku-Juhani O. Saarinen (Original SHA3/KECCAK implementation in C)
@@ -15,6 +17,7 @@ public class KECCAK {
     
     /***/
     public int pt, rsize, mdlen; // these don't overflow
+    
 
     /***/
     public static final long[] keccak_roundConstant = {
@@ -123,7 +126,7 @@ public class KECCAK {
      * @return the 64-bit x rotated, y position value
      */
     public static long rotate_left64 (long theX, int theY) {
-        return ((theX << theY) | (theX >>> (-theY)));
+        return ((theX << theY) | (theX >>> (64-theY))); 
     };
     
  // --------------------------------- SHA3 Section -------------------------------- //
@@ -134,9 +137,10 @@ public class KECCAK {
      * @param theMdlen should always be 32 for SHAKE
      */
     public void sha3_init(int theMdlen) {
-        for (int i = 0; i < 25; i++) {
-            st[i] = (byte) 0;
-        }
+       // for (int i = 0; i < 25; i++) { 
+        //    st[i] = (byte) 0;
+       // }
+        Arrays.fill(st, (byte) 0);
         mdlen = theMdlen;
         rsize = 200 - 2 * mdlen;
         pt = 0;
@@ -161,7 +165,11 @@ public class KECCAK {
     }
 
     /**
-     * 
+     *  if (kmac) {
+            update(right_encode_0, right_encode_0.length); // mandatory padding as per the NIST specification
+        }
+        // the (binary) cSHAKE suffix is 00, while the (binary) Model.SHAKE suffix is 1111
+        this.b[this.pt] ^= (byte)(this.ext ? 0x04 : 0x1F);
      */
     public void shake_xof() {
         st[pt] ^= 0x1F;
@@ -182,6 +190,23 @@ public class KECCAK {
         for (int i = 0; i < mdlen; i++) {
             theOutput[i] = st[i];
         }
+    }
+    /**
+     * Sponge section
+     * @param theOutput
+     * @param myLength, the length of section
+     */
+    public void sha3_sponge(byte[] theOutput, int myLength) {
+        int myPt = pt;
+        for (int i = 0; i < myLength; i++) {
+            if (myPt >= rsize) {
+                sha3_keccak(st);
+                myPt = 0;
+            }
+            myPt = myPt + 1;
+            theOutput[i] = st[myPt];
+        }
+        pt = myPt;
     }
 
 }

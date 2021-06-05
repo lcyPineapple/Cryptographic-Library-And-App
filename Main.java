@@ -40,8 +40,8 @@ public class Main {
        //     System.out.println(Integer.toBinaryString(myByte));
        // }
         
-        EnDeCrypt.hash("hello");
-        //EnDeCrypt.encryptFileSymetric("C:\\Users\\Leika Yamada\\Documents\\GitHub\\copy\\Cryptographic-Library-And-App\\test.txt", "mypass");
+        //EnDeCrypt.hash("hello");
+        EnDeCrypt.encryptFileSymetric("C:\\Users\\Leika Yamada\\Documents\\GitHub\\copy\\Cryptographic-Library-And-App\\test.txt", "mypass");
         
         
         
