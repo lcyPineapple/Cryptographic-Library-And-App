@@ -1,12 +1,8 @@
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
 
 public class Main {
 		
@@ -19,16 +15,13 @@ public class Main {
     public static void main(String[] theArgs) throws IOException {
         
         Scanner input = new Scanner(System.in);
-        PrintStream output = null;
         boolean exitProgram = false;
         //boolean exitProgram = true;
         while (!exitProgram) {
         	displayMenu();
         	
         	int choice = input.nextInt();
-        	
-        	File selectedFile = null;
-        	
+        	        	
         	switch (choice) {
         	
         		// ************************************** //
@@ -47,50 +40,90 @@ public class Main {
                 		
                 		// Cryptographic Hash
                 		case 1:
+                			
+                			System.out.println("Enter the file path to compute plain cryptographic hash: ");
+                			input.nextLine();
+                			String hashFilePath = input.nextLine();
+                			
+                			boolean checkHashFile = isValidPath(hashFilePath);
+                			while (checkHashFile == false) {
+                				System.out.println("Please try again: ");
+                				hashFilePath = input.nextLine();
+                    			checkHashFile = isValidPath(hashFilePath);
+                			}
+                			
+                			EnDeCrypt.hashFromFile(hashFilePath);
+                			
                 			break;
                 			
                 		// Message for Cryptographic Hash
                 		case 2:
+                			
                 			System.out.println("Enter your message: ");
                 			input.nextLine();
                 			String userInput = input.nextLine();
-                			byte[] message = userInput.getBytes();
-                			System.out.println("Cryptographic Hash Result: " + message);
+                			EnDeCrypt.hash(userInput);
                 			
                 			break;
                 			
                 		// Encrypt a Data File
                 		case 3:
-                			System.out.println("Select file to encrypt: ");
-                			JFileChooser encryptFile = new JFileChooser(FileSystemView.getFileSystemView());
                 			
-                			int encryptValue = encryptFile.showOpenDialog(null);
+                			System.out.println("Enter the file path you want to encrypt: ");
+                			input.nextLine();
+                			String encryptFilePath = input.nextLine();
                 			
-                			if (encryptValue == JFileChooser.APPROVE_OPTION) {
-                				selectedFile = encryptFile.getSelectedFile();
-                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
-                				System.out.println("Encrypted file is saved to: " + filePath.toString());
+                			boolean checkEncryptFile = isValidPath(encryptFilePath);
+                			while (checkEncryptFile == false) {
+                				System.out.println("Please try again: ");
+                				encryptFilePath = input.nextLine();
+                    			checkEncryptFile = isValidPath(encryptFilePath);
                 			}
                 			
+                			System.out.println("Enter a passphrase: ");
+                			String encryptPass = input.nextLine();
+                			EnDeCrypt.encryptFileSymetric(encryptFilePath, encryptPass);
+
                 			break;
                 			
                 		// Decrypt a Data File
                 		case 4:
-                			System.out.println("Select file to decrypt: ");
-                			JFileChooser decryptFile = new JFileChooser(FileSystemView.getFileSystemView());
                 			
-                			int decryptValue = decryptFile.showOpenDialog(null);
+                			System.out.println("Enter the file path you want to decrypt: ");
+                			input.nextLine();
+                			String decryptFilePath = input.nextLine();
                 			
-                			if (decryptValue == JFileChooser.APPROVE_OPTION) {
-                				selectedFile = decryptFile.getSelectedFile();
-                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
-                				System.out.println("Decrypted file is saved to: " + filePath.toString());
+                			boolean checkDecryptFile = isValidPath(decryptFilePath);
+                			while (checkDecryptFile == false) {
+                				System.out.println("Please try again: ");
+                				decryptFilePath = input.nextLine();
+                				checkDecryptFile = isValidPath(decryptFilePath);
                 			}
                 			
+                			System.out.println("Enter a passphrase: ");
+                			String decryptPass = input.nextLine();
+                			EnDeCrypt.decryptFileSymetric(decryptFilePath, decryptPass);
+
                 			break;
                 		
                 		// Compute an Authentication Tag (MAC)
                 		case 5:
+                			
+                			System.out.println("Enter the file path you want to compute an MAC (Must be exact): ");
+                			input.nextLine();
+                			String authFilePath = input.nextLine();
+                			
+                			boolean checkAuthFile = isValidPath(authFilePath);
+                			while (checkAuthFile == false) {
+                				System.out.println("Please try again: ");
+                				authFilePath = input.nextLine();
+                				checkAuthFile = isValidPath(authFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String authPass = input.nextLine();
+                			EnDeCrypt.hash(authPass, authFilePath);
+
                 			break;
                 			
                 		// Exit Program
@@ -117,6 +150,12 @@ public class Main {
                 	
                 		// Elliptic Key Pair
 	                	case 1:
+	                		
+	                		System.out.println("Enter a passphrase: ");
+	                		input.nextLine();
+	                		String keyPass = input.nextLine();
+	                		EnDeEllipticCurve.generateKeyPairElliptic(keyPass);
+	                		
 	            			break;
 	            			
 	            		// Encrypt Private Key
@@ -125,31 +164,24 @@ public class Main {
 	            			
 	            		// Encrypt a Data File
 	            		case 3:
-	            			System.out.println("Select file to encrypt: ");
-                			JFileChooser encryptFile = new JFileChooser(FileSystemView.getFileSystemView());
+
+	            			System.out.println("Enter the file path of your elliptic public key: ");
+                			input.nextLine();
+                			String encryptECFilePath = input.nextLine();
                 			
-                			int encryptValue = encryptFile.showOpenDialog(null);
-                			
-                			if (encryptValue == JFileChooser.APPROVE_OPTION) {
-                				selectedFile = encryptFile.getSelectedFile();
-                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
-                				System.out.println("Encrypted file is saved to: " + filePath.toString());
+                			boolean checkEncryptECFile = isValidPath(encryptECFilePath);
+                			while (checkEncryptECFile == false) {
+                				System.out.println("Please try again: ");
+                				encryptECFilePath = input.nextLine();
+                				checkEncryptECFile = isValidPath(encryptECFilePath);
                 			}
                 			
+                			EnDeEllipticCurve.generateKeyPairElliptic(encryptECFilePath);
+	            			
 	            			break;
 	            			
 	            		// Decrypt an Elliptic-encrypted File
 	            		case 4:
-	            			System.out.println("Select file to decrypt: ");
-                			JFileChooser decryptFile = new JFileChooser(FileSystemView.getFileSystemView());
-                			
-                			int decryptValue = decryptFile.showOpenDialog(null);
-                			
-                			if (decryptValue == JFileChooser.APPROVE_OPTION) {
-                				selectedFile = decryptFile.getSelectedFile();
-                				Path filePath = Paths.get(selectedFile.getAbsolutePath());
-                				System.out.println("Decrypted file is saved to: " + filePath.toString());
-                			}
                 			
 	            			break;
 	            			
@@ -297,5 +329,19 @@ public class Main {
     	
     	System.out.print(sb.toString());
     	System.out.print("Enter an option: ");
+    }
+    
+    /**
+     * Checks for a valid file path
+     * @param path the file path to be check
+     * @return true if exist, false otherwise
+     */
+    public static boolean isValidPath(String thePath) {
+    	try {
+    		Files.readAllBytes(Paths.get(thePath));
+    	} catch (Exception e) {
+    		return false;
+    	}
+    	return true;
     }
 }
