@@ -11,8 +11,9 @@ public class Main {
 	 * 
 	 * @param theArgs
 	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-    public static void main(String[] theArgs) throws IOException {
+    public static void main(String[] theArgs) throws IOException, ClassNotFoundException {
         
         Scanner input = new Scanner(System.in);
         boolean exitProgram = false;
@@ -165,7 +166,7 @@ public class Main {
 	            		// Encrypt a Data File
 	            		case 3:
 
-	            			System.out.println("Enter the file path of your elliptic public key: ");
+	            			System.out.println("Enter the file path of your encrypt: ");
                 			input.nextLine();
                 			String encryptECFilePath = input.nextLine();
                 			
@@ -176,12 +177,27 @@ public class Main {
                 				checkEncryptECFile = isValidPath(encryptECFilePath);
                 			}
                 			
-                			EnDeEllipticCurve.generateKeyPairElliptic(encryptECFilePath);
+                			EnDeEllipticCurve.encryptElliptic(encryptECFilePath);
 	            			
 	            			break;
 	            			
 	            		// Decrypt an Elliptic-encrypted File
 	            		case 4:
+                			
+	            			System.out.println("Enter the file path you want to decrypt: ");
+                			input.nextLine();
+                			String decryptECFilePath = input.nextLine();
+                			
+                			boolean checkDecrypECtFile = isValidPath(decryptECFilePath);
+                			while (checkDecrypECtFile == false) {
+                				System.out.println("Please try again: ");
+                				decryptECFilePath = input.nextLine();
+                				checkDecrypECtFile = isValidPath(decryptECFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String decryptECPass = input.nextLine();
+                			EnDeEllipticCurve.decryptElliptic(decryptECFilePath, decryptECPass);
                 			
 	            			break;
 	            			
