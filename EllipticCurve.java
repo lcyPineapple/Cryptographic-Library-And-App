@@ -115,9 +115,9 @@ public class EllipticCurve {
 	}
 	
 	/**
-	 * 
+	 * Compute the sum 
 	 * @param theCoordinates
-	 * @return
+	 * @return an elliptic curve point
 	 */
 	public EllipticCurve computeSum(EllipticCurve theCoordinates) {
 		// base = (x_1 * x_2 * y_1 * y_2) mod p

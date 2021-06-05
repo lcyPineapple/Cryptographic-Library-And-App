@@ -3,6 +3,7 @@ import java.util.Arrays;
 /** This File contains .
  *
  * @author Markku-Juhani O. Saarinen (Original SHA3/KECCAK implementation in C)
+ * @author Paulo S. L. M. Barreto (Java version, cSHAKE, KMACXOF)
  * @date 5/2/2021
  *
  **/
@@ -132,8 +133,7 @@ public class KECCAK {
  // --------------------------------- SHA3 Section -------------------------------- //
 
     /**
-     * 
-     * 
+     * Initialize the SHA3 sponge
      * @param theMdlen should always be 32 for SHAKE
      */
     public void sha3_init(int theMdlen) {
@@ -147,10 +147,9 @@ public class KECCAK {
     }
 
     /**
-     * 
-     * 
-     * @param theData
-     * @param theLen
+     * Update the SHA3 sponge
+     * @param theData byte-oriented data buffer
+     * @param theLen byte count on the buffer
      */
     public void sha3_update(byte[] theData, int theLen) {
         int j = pt;
@@ -179,8 +178,8 @@ public class KECCAK {
     }
     
     /**
-     * 
-     * @param theOutput
+     * Squeeze a chunk of the hashed bytes
+     * @param theOutput the hash value buffer
      */
     public void sha3_final(byte[] theOutput) {
         st[pt] ^= 0x06;
