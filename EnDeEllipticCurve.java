@@ -1,12 +1,23 @@
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+
+/**This class handles the encryption and decryption of files, and 
+ * input and prepares output files and all console output. For Part 2
+ *
+ * @author Leika Yamada
+ * @date 6/04/2021
+ * */
 public class EnDeEllipticCurve {
 	
 	public static final int KINT = 64; // 512 possible bits in byte[64] for KECCAK[512]
@@ -20,8 +31,7 @@ public class EnDeEllipticCurve {
 	 * @param fileName bit string to be padded
 	 * @param password integer used to pad string
 	 */
-	public static void generateKeyPairElliptic(String fileName, String password) throws IOException {
-		byte[] encryptedFile = Files.readAllBytes(Paths.get(fileName));
+	public static void generateKeyPairElliptic(String password) throws IOException {
 		byte[] myPassBytes = password.getBytes();
 		byte[] s = KMACXOF256.theKMACXOF256(password.getBytes(), "".getBytes(), 512, "K".getBytes());
 		BigInteger bigS = new BigInteger(s);
@@ -35,6 +45,51 @@ public class EnDeEllipticCurve {
 	    myWriter.write(v.toString());
 	    myWriter.close();
 	    System.out.println("Your key pair has been written to : generateKeyPairElliptic.txt");
+	}
+	
+	/**
+	 *Encrypting a byte array m under the (Schnorr/ECDHIES) public key V:
+	  k = Random(512); k = 4k
+	 W = k*V; Z = k*G
+	 (ke || ka) = KMACXOF256(Wx, “”, 1024, “P”)
+	 c = KMACXOF256(ke, “”, |m|, “PKE”) xor m
+	 t = KMACXOF256(ka, m, 512, “PKA”)
+	 cryptogram: (Z, c, t)
+	 * @throws ClassNotFoundException 
+	 */
+	public static void encryptElliptic(String fileName) throws IOException, ClassNotFoundException {
+		byte[] fileInput = Files.readAllBytes(Paths.get(fileName));
+		SecureRandom randNum = new SecureRandom();
+		byte[] k = new byte[KINT];
+		randNum.nextBytes(k);
+		BigInteger kbig = BigInteger.valueOf(4).multiply(new BigInteger(k));
+		
+		ObjectInputStream obStream = new ObjectInputStream(new FileInputStream(fileName));
+		EllipticCurve v = (EllipticCurve) obStream.readObject();
+		EllipticCurve w = v.scalarMultiplication(kbig);
+		
+		
+		BigInteger mynum = BigInteger.valueOf(18);
+		EllipticCurve g = new EllipticCurve(mynum, false);
+        EllipticCurve Z = g.scalarMultiplication(kbig);
+      
+        byte[] kellka = KMACXOF256.theKMACXOF256(w.getX().toByteArray(), "".getBytes(), 1024, "p".getBytes());
+        byte[] ke = Arrays.copyOfRange(kellka, 0, KINT);
+        byte[] ka = Arrays.copyOfRange(kellka, KINT, 128);
+        int myNum = fileInput.length;
+        byte[] c = KMACXOF256.theKMACXOF256(ke, "".getBytes(), myNum * 8, "PKE".getBytes());
+        byte[] cxor = new byte[myNum];
+        for (int i = 0; i < myNum; i++) {
+            cxor[i] = (byte) (fileInput[i] ^ c[i]);
+        }
+        byte[] t = KMACXOF256.theKMACXOF256(ka, fileInput, 512, "PKA".getBytes());
+        
+        File myObj = new File("encrypEllip.txt");
+		FileWriter myWriter = new FileWriter("encrypEllip.txt");
+	    myWriter.write("Z = " + Z.getX() + " C = " + Arrays.toString(cxor) + "T = " + Arrays.toString(t));
+	    myWriter.close();
+	    System.out.println("Successfully Encrypted.");
+	    System.out.println("Your cryptogram has been written to : encrypEllip.txt");
 	}
 	
 }
