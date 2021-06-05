@@ -349,12 +349,12 @@ public class Main {
     	sb.append("\n---Elliptic Menu Option---\n");
     	sb.append("\n");
     	sb.append("1) Generate Elliptic Key Pair \n");
-    	sb.append("2) Encrypt Private Key \n");
+    	sb.append("2) Encrypt Private Key (Unavailable) \n");
     	sb.append("3) Encrypt a Data File \n");
     	sb.append("4) Decrypt an Elliptic-encrypted File \n");
-    	sb.append("5) Message to Encrypt/Decrypt \n");
+    	sb.append("5) Message to Encrypt/Decrypt (Unavailable) \n");
     	sb.append("6) Sign a Given File \n");
-    	sb.append("7) Verify a Data File \n");
+    	sb.append("7) Verify a Data File (Unavailable) \n");
     	sb.append("8) Exit Program \n");
     	sb.append("\n");
     	
