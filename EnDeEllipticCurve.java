@@ -25,6 +25,50 @@ public class EnDeEllipticCurve {
 	public static final char[] HEXIDECIMAL = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	
 	/**
+	 *  verify signiture: ran out of time
+	 */
+	public static void verifySig(String password, String fileName) throws IOException {
+		//NEED to do
+	}
+	/**
+	 *  Generating a signature for a byte array m under passphrase pw:
+		s = KMACXOF256(pw, “”, 512, “K”); s = 4s
+		k = KMACXOF256(s, m, 512, “N”); k = 4k
+		U = k*G;
+		h = KMACXOF256(Ux, m, 512, “T”); z = (k – hs) mod r
+		signature: (h, z)
+	 */
+	public static void generateSig(String password, String fileName) throws IOException {
+		byte[] m = Files.readAllBytes(Paths.get(fileName));
+		byte[] myPassBytes = password.getBytes();
+		byte[] s = KMACXOF256.theKMACXOF256(password.getBytes(), "".getBytes(), 512, "K".getBytes());
+		byte[] k = KMACXOF256.theKMACXOF256(s, m, 512, "N".getBytes());
+		BigInteger bigS = new BigInteger(s);
+		BigInteger s4 = BigInteger.valueOf(4).multiply(bigS);
+		BigInteger bigk = new BigInteger(k);
+		BigInteger k4 = BigInteger.valueOf(4).multiply(bigk);
+		BigInteger mynum = BigInteger.valueOf(18);
+		EllipticCurve g = new EllipticCurve(mynum, false);
+		EllipticCurve u = g.scalarMultiplication(k4);
+		byte[] h =  KMACXOF256.theKMACXOF256(u.getX().toByteArray(), m, 512, "T".getBytes());
+		BigInteger hbig = new BigInteger(h);
+		BigInteger hs = hbig.multiply(s4);
+		BigInteger big = new BigInteger("1000000000000000000000000000000");
+		BigInteger r = new BigInteger("2");
+	    r = (r.pow(519)).subtract(big);
+		BigInteger z = (k4.subtract(hs)).mod(r);
+		Signiture sig = new Signiture(h, z);
+		
+		File myObj = new File("generateSig.txt");
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("generateSig.txt"));
+        out.writeObject(sig);
+	    out.close();
+	    System.out.println("Successfully Encrypted.");
+	    System.out.println("Your signature has been written to : generateSig.txt");
+	    
+	}
+	
+	/**
 	 *  Generating a (Schnorr/ECDHIES) key pair from passphrase pw:
 	 *  s = KMACXOF256(pw, “”, 512, “K”);
 	 *  s =  s xor 4s
