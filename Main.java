@@ -244,10 +244,42 @@ public class Main {
                 			
                 		// Sign a Given File
 	            		case 6:
-                			break;
+	            			
+	            			System.out.println("Enter the file you want to sign: ");
+	            			input.nextLine();
+                			String signFilePath = input.nextLine();
+                			
+                			boolean checkSignFile = isValidPath(signFilePath);
+                			while (checkSignFile == false) {
+                				System.out.println("Please try again: ");
+                				signFilePath = input.nextLine();
+                				checkSignFile = isValidPath(signFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String signPass = input.nextLine();    
+                			EnDeEllipticCurve.generateSig(signPass, signFilePath);
+	            			
+	            			break;
                 			
                 		// Verify a Data File
 	            		case 7:
+	            			
+	            			System.out.println("Enter the file you want to verify: ");
+	            			input.nextLine();
+                			String verifyFilePath = input.nextLine();
+                			
+                			boolean checkVerifyFile = isValidPath(verifyFilePath);
+                			while (checkVerifyFile == false) {
+                				System.out.println("Please try again: ");
+                				verifyFilePath = input.nextLine();
+                				checkVerifyFile = isValidPath(verifyFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String verifyPass = input.nextLine();    
+                			EnDeEllipticCurve.generateSig(verifyPass, verifyFilePath);
+	            			
                 			break;
                 			
                 		// Exit Program
@@ -317,12 +349,12 @@ public class Main {
     	sb.append("\n---Elliptic Menu Option---\n");
     	sb.append("\n");
     	sb.append("1) Generate Elliptic Key Pair \n");
-    	sb.append("2) Encrypt Private Key \n");
+    	sb.append("2) Encrypt Private Key (Unavailable) \n");
     	sb.append("3) Encrypt a Data File \n");
     	sb.append("4) Decrypt an Elliptic-encrypted File \n");
-    	sb.append("5) Message to Encrypt/Decrypt \n");
+    	sb.append("5) Message to Encrypt/Decrypt (Unavailable) \n");
     	sb.append("6) Sign a Given File \n");
-    	sb.append("7) Verify a Data File \n");
+    	sb.append("7) Verify a Data File (Unavailable) \n");
     	sb.append("8) Exit Program \n");
     	sb.append("\n");
     	
