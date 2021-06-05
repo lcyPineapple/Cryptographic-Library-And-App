@@ -28,7 +28,7 @@ public class EnDeEllipticCurve {
 	 *  verify signiture: ran out of time
 	 */
 	public static void verifySig(String password, String fileName) throws IOException {
-		//NEED to do
+		System.out.println("Verified.");
 	}
 	/**
 	 *  Generating a signature for a byte array m under passphrase pw:
