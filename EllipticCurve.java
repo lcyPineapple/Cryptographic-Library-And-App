@@ -7,6 +7,7 @@
  */
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class EllipticCurve {
 
@@ -163,6 +164,20 @@ public class EllipticCurve {
 		
 		int squareResult = result.multiply(result).subtract(theV).mod(myPValue).signum();
 		return (squareResult == 0) ? result : null;
+	}
+	
+	/**
+	 * Generate the Elliptic Curve point
+	 * @param theCoordinates the elliptic curve point
+	 * @return an elliptic curve point parsed from byte array
+	 */
+	public static EllipticCurve compute(byte[] theCoordinates) {
+		int pointByte = myPValue.toByteArray().length * 2;
+		BigInteger x = new BigInteger(Arrays.copyOfRange(theCoordinates, 0, pointByte / 2));
+		BigInteger y = new BigInteger(Arrays.copyOfRange(theCoordinates, pointByte / 2, pointByte));
+		
+		EllipticCurve result = new EllipticCurve (x, y);
+		return result;
 	}
 	
 	/**
