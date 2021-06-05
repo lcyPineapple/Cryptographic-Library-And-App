@@ -109,8 +109,12 @@ public class EnDeEllipticCurve {
 		byte[] k = new byte[KINT];
 		randNum.nextBytes(k);
 		BigInteger kbig = BigInteger.valueOf(4).multiply(new BigInteger(k));
-		
-		ObjectInputStream obStream = new ObjectInputStream(new FileInputStream(fileName));
+		// Creates a file input stream linked with the specified file
+		FileInputStream fileStream = new FileInputStream(fileName);
+
+		// Creates an object input stream using the file input stream
+		ObjectInputStream obStream = new ObjectInputStream(fileStream);
+		//ObjectInputStream obStream = new ObjectInputStream(new FileInputStream(fileName));
 		EllipticCurve v = (EllipticCurve) obStream.readObject();
 		EllipticCurve w = v.scalarMultiplication(kbig);
 		
