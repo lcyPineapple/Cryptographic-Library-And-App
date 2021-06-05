@@ -149,7 +149,7 @@ public class EllipticCurve {
 	 * @param theLeastSignBit desired least significant bit (true: 1, false: 0).
 	 * @return square root if root exist, otherwise null
 	 */
-	public BigInteger sqrt(BigInteger theV, boolean theLeastSignBit) {
+	public static BigInteger sqrt(BigInteger theV, boolean theLeastSignBit) {
 		assert(myPValue.testBit(0) && myPValue.testBit(1)); // p = 3 (mod 4)
 				
 		if (theV.signum() == 0) {
