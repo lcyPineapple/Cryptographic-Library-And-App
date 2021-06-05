@@ -149,7 +149,7 @@ public class EllipticCurve {
 	 * @param theLeastSignBit desired least significant bit (true: 1, false: 0).
 	 * @return square root if root exist, otherwise null
 	 */
-	public static BigInteger sqrt(BigInteger theV, boolean theLeastSignBit) {
+	public BigInteger sqrt(BigInteger theV, boolean theLeastSignBit) {
 		assert(myPValue.testBit(0) && myPValue.testBit(1)); // p = 3 (mod 4)
 				
 		if (theV.signum() == 0) {
@@ -166,12 +166,13 @@ public class EllipticCurve {
 		return (squareResult == 0) ? result : null;
 	}
 	
+	
 	/**
 	 * Generate the Elliptic Curve point
 	 * @param theCoordinates the elliptic curve point
 	 * @return an elliptic curve point parsed from byte array
 	 */
-	public static EllipticCurve compute(byte[] theCoordinates) {
+	public EllipticCurve compute(byte[] theCoordinates) {
 		int pointByte = myPValue.toByteArray().length * 2;
 		BigInteger x = new BigInteger(Arrays.copyOfRange(theCoordinates, 0, pointByte / 2));
 		BigInteger y = new BigInteger(Arrays.copyOfRange(theCoordinates, pointByte / 2, pointByte));

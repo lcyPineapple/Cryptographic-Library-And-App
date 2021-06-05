@@ -25,10 +25,10 @@ public class EnDeEllipticCurve {
 		byte[] myPassBytes = password.getBytes();
 		byte[] s = KMACXOF256.theKMACXOF256(password.getBytes(), "".getBytes(), 512, "K".getBytes());
 		BigInteger bigS = new BigInteger(s);
-		BigInteger sxor = BigInteger.valueOf(4).multiply(bigS);
+		BigInteger s4 = BigInteger.valueOf(4).multiply(bigS);
 		BigInteger mynum = BigInteger.valueOf(18);
 		EllipticCurve g = new EllipticCurve(mynum, false);
-		EllipticCurve v = g.scalarMultiplication(sxor);
+		EllipticCurve v = g.scalarMultiplication(s4);
 		
 		File myObj = new File("generateKeyPairElliptic.txt");
 		FileWriter myWriter = new FileWriter("generateKeyPairElliptic.txt");
