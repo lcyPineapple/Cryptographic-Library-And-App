@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,10 +22,11 @@ import java.util.Arrays;
 public class EnDeEllipticCurve {
 	
 	public static final int KINT = 64; // 512 possible bits in byte[64] for KECCAK[512]
-
+	public static final char[] HEXIDECIMAL = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	
 	/**
 	 *  Generating a (Schnorr/ECDHIES) key pair from passphrase pw:
-	 *  s = KMACXOF256(pw, ��, 512, �K�);
+	 *  s = KMACXOF256(pw, “”, 512, “K”);
 	 *  s =  s xor 4s
 	 *  V = s*G
 	 *  key pair: (s, V)
@@ -51,9 +53,9 @@ public class EnDeEllipticCurve {
 	 *Encrypting a byte array m under the (Schnorr/ECDHIES) public key V:
 	  k = Random(512); k = 4k
 	 W = k*V; Z = k*G
-	 (ke || ka) = KMACXOF256(Wx, ��, 1024, �P�)
-	 c = KMACXOF256(ke, ��, |m|, �PKE�) xor m
-	 t = KMACXOF256(ka, m, 512, �PKA�)
+	 (ke || ka) = KMACXOF256(Wx, “”, 1024, “P”)
+	 c = KMACXOF256(ke, “”, |m|, “PKE”) xor m
+	 t = KMACXOF256(ka, m, 512, “PKA”)
 	 cryptogram: (Z, c, t)
 	 * @throws ClassNotFoundException 
 	 */
@@ -85,11 +87,55 @@ public class EnDeEllipticCurve {
         byte[] t = KMACXOF256.theKMACXOF256(ka, fileInput, 512, "PKA".getBytes());
         
         File myObj = new File("encrypEllip.txt");
-		FileWriter myWriter = new FileWriter("encrypEllip.txt");
-	    myWriter.write("Z = " + Z.getX() + " C = " + Arrays.toString(cxor) + "T = " + Arrays.toString(t));
-	    myWriter.close();
+        Cryptogram myCrypt = new Cryptogram(Z, c, t);
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("encrypEllip.txt"));
+        out.writeObject(myCrypt);
+	    out.close();
 	    System.out.println("Successfully Encrypted.");
 	    System.out.println("Your cryptogram has been written to : encrypEllip.txt");
 	}
 	
+	/**
+	 * Decrypting a cryptogram (Z, c, t) under passphrase pw
+	 s = KMACXOF256(pw, “”, 512, “K”); s = 4s
+	 W = s*Z
+	 (ke || ka) = KMACXOF256(Wx, “”, 1024, “P”)
+	 m = KMACXOF256(ke, “”, |c|, “PKE”) xor c
+	 t’ = KMACXOF256(ka, m, 512, “PKA”)
+	 accept if, and only if, t’ = 
+	 */
+	public static void decryptElliptic(String filename, String pass) throws IOException, ClassNotFoundException {
+	    ObjectInputStream ob = new ObjectInputStream(new FileInputStream(filename));
+	    Cryptogram encryptogram = (Cryptogram) ob.readObject();
+	    EllipticCurve z = encryptogram.getz();
+	    byte[] c = encryptogram.getc();
+	    byte[] t = encryptogram.gett();
+	      
+	    byte[] s = KMACXOF256.theKMACXOF256(pass.getBytes(), "".getBytes(), 512, "K".getBytes());
+	    BigInteger sbig = BigInteger.valueOf(4).multiply(new BigInteger(s));
+
+        EllipticCurve w = z.scalarMultiplication(sbig);
+	    byte[] kellka = KMACXOF256.theKMACXOF256(w.getX().toByteArray(), "".getBytes(), 1024, "p".getBytes());
+	    byte[] ke = Arrays.copyOfRange(kellka, 0, KINT);
+	    byte[] ka = Arrays.copyOfRange(kellka, KINT, 128);
+	        
+	    byte[] m = KMACXOF256.theKMACXOF256(ke, "".getBytes(), c.length, "PKE".getBytes());
+	    byte[] mxor = new byte[c.length];
+	    for (int i = 0; i < m.length; i++) {
+	        mxor[i] = (byte) (m[i] ^ c[i]);
+	    }
+	    byte[] t2 = KMACXOF256.theKMACXOF256(ka, m, 512, "PKA".getBytes());
+	    if (Arrays.equals(t, t2)) {
+	        System.out.println("File Successfully Decrypted");
+	        StringBuilder hashedInput = new StringBuilder();
+	        for (byte msg : mxor) {
+	             int hex = msg & 0xFF;
+	             hashedInput.append(HEXIDECIMAL[hex >>> 4]); 
+	             hashedInput.append(HEXIDECIMAL[hex & 0x0F]); 
+	        }
+	           System.out.println("Cryptogram contains: " + hashedInput.toString());
+	        } else {
+	        	System.out.println("Incorrect Password");
+	        }    
+	}
 }
