@@ -244,10 +244,42 @@ public class Main {
                 			
                 		// Sign a Given File
 	            		case 6:
-                			break;
+	            			
+	            			System.out.println("Enter the file you want to sign: ");
+	            			input.nextLine();
+                			String signFilePath = input.nextLine();
+                			
+                			boolean checkSignFile = isValidPath(signFilePath);
+                			while (checkSignFile == false) {
+                				System.out.println("Please try again: ");
+                				signFilePath = input.nextLine();
+                				checkSignFile = isValidPath(signFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String signPass = input.nextLine();    
+                			EnDeEllipticCurve.generateSig(signPass, signFilePath);
+	            			
+	            			break;
                 			
                 		// Verify a Data File
 	            		case 7:
+	            			
+	            			System.out.println("Enter the file you want to verify: ");
+	            			input.nextLine();
+                			String verifyFilePath = input.nextLine();
+                			
+                			boolean checkVerifyFile = isValidPath(verifyFilePath);
+                			while (checkVerifyFile == false) {
+                				System.out.println("Please try again: ");
+                				verifyFilePath = input.nextLine();
+                				checkVerifyFile = isValidPath(verifyFilePath);
+                			}
+                			
+                			System.out.println("Enter a passphrase: ");
+                			String verifyPass = input.nextLine();    
+                			EnDeEllipticCurve.generateSig(verifyPass, verifyFilePath);
+	            			
                 			break;
                 			
                 		// Exit Program
